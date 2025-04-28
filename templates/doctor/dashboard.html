@@ -69,11 +69,16 @@
                                     <td>{{a.appointment_id}}</td>
                                     <td>{{a.patient.full_name}}</td>
                                     <td>{{a.issues}}</td>
-                                    <td>{{a.appointment_date}}</td>
+                                    <td>{{a.appointment_date|date:"F d, Y"}}</td>
                                     <td>{{a.status}}</td>
                                     <td>
                                         <a href="{% url 'doctor:appointment_detail' a.appointment_id %}" class="btn btn-secondary btn-sm"> <i class="fas fa-eye"></i></a>
-                                        <a href="{% url 'doctor:cancel_appointment' a.appointment_id %}" class="btn btn-danger btn-sm">Cancel Appointment <i class="fas fa-trash ms-2"></i></a>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#rescheduleModal{{a.appointment_id}}">
+                                            Reschedule <i class="fas fa-calendar-alt ms-2"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#cancelModal{{a.appointment_id}}">
+                                            Cancel Appointment <i class="fas fa-trash ms-2"></i>
+                                        </button>
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -85,4 +90,59 @@
         </div>
     </div>
 </section>
+
+<!-- Cancel Confirmation Modals -->
+{% for a in appointments %}
+<div class="modal fade" id="cancelModal{{a.appointment_id}}" tabindex="-1" aria-labelledby="cancelModalLabel{{a.appointment_id}}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel{{a.appointment_id}}">Confirm Cancellation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to cancel the appointment with {{a.patient.full_name}} on {{a.appointment_date|date:"F d, Y"}}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, Keep Appointment</button>
+                <a href="{% url 'doctor:cancel_appointment' a.appointment_id %}" class="btn btn-danger">Yes, Cancel Appointment</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reschedule Modal -->
+<div class="modal fade" id="rescheduleModal{{a.appointment_id}}" tabindex="-1" aria-labelledby="rescheduleModalLabel{{a.appointment_id}}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rescheduleModalLabel{{a.appointment_id}}">Reschedule Appointment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{% url 'doctor:reschedule_appointment' a.appointment_id %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="new_date{{a.appointment_id}}" class="form-label">New Date</label>
+                        <input type="date" class="form-control" id="new_date{{a.appointment_id}}" name="new_date" required min="{{ today|date:'Y-m-d' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_time{{a.appointment_id}}" class="form-label">New Time Slot</label>
+                        <select class="form-control" id="new_time{{a.appointment_id}}" name="new_time" required>
+                            <option value="">Select a time slot</option>
+                            {% for hour in time_slots %}
+                                <option value="{{ hour }}">{{ hour }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Reschedule Appointment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock content %}

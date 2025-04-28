@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g$95qor-(xnlh_nb-vo^sn2v!d+g+_8@eo*6#^p3rh3tjwngs5'
+SECRET_KEY = env.str('SECRET_KEY', 'django-insecure-g$95qor-(xnlh_nb-vo^sn2v!d+g+_8@eo*6#^p3rh3tjwngs5')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -248,8 +248,8 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "default",
     "dark_mode_theme": None,
     "button_classes": {
-        "primary": "btn-outline-primary",
-        "secondary": "btn-outline-secondary",
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
         "info": "btn-info",
         "warning": "btn-warning",
         "danger": "btn-danger",

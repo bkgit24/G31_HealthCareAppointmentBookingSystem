@@ -5,7 +5,7 @@
             {% include 'doctor/sidebar.html' %}
 
             <div class="col-lg-9 col-md-8 col-12">
-                <h4 class="mb-0 mb-4 fw-bold">Appointment Detail #12345</h4>
+                <h4 class="mb-0 mb-4 fw-bold">Appointment Detail #{{appointment.appointment_id}}</h4>
                 <div class="card mb-4">
                     <div class="shadow border p-3 mb-4 rounded-4">
                         <p>
@@ -16,7 +16,8 @@
                                 <p><span class="fw-semibold text-dark">Issue:</span> {{appointment.issues}}</p>
                                 <p><span class="fw-semibold text-dark">Symptoms:</span> {{appointment.symptoms}}</p>
                                 <p><span class="fw-semibold text-dark">Status:</span> {{appointment.status}}</p>
-                                <p><span class="fw-semibold text-dark">Date:</span> {{appointment.appointment_date}}</p>
+                                <p><span class="fw-semibold text-dark">Date:</span> {{appointment.appointment_date|date:"F d, Y"}}</p>
+                                <p><span class="fw-semibold text-dark">Time:</span> {{appointment.appointment_date|date:"H:i"}}</p>
                                 <p>
                                     <span class="fw-semibold text-dark">Action:</span>
 
