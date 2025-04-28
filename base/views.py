@@ -8,6 +8,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import datetime
 from django.utils import timezone
+from decimal import Decimal
 
 import requests
 import stripe
@@ -73,8 +74,8 @@ def book_appointment(request, service_id, doctor_id):
                 patient=patient,
                 appointment=appointment,
                 sub_total=appointment.service.cost,
-                tax=appointment.service.cost * 5 / 100,
-                total=appointment.service.cost * 1.05,
+                tax=appointment.service.cost * Decimal('0.05'),
+                total=appointment.service.cost * Decimal('1.05'),
                 status="Unpaid"
             )
 
@@ -89,7 +90,7 @@ def book_appointment(request, service_id, doctor_id):
         }
         return render(request, "base/book_appointment.html", context)
     except Exception as e:
-        return redirect('index')
+        return redirect('base:index')
 
 @login_required
 def checkout(request, billing_id):
